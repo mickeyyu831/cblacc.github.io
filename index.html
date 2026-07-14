@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CBL 協聯證券 — 開戶申請表</title>
+  <link rel="stylesheet" href="style.css"/>
+  <!-- Light assets only at startup. Heavy PDF engines (pdf-lib, fontkit)
+       and the big data files (font-data 7.5MB, pdf-data 7.3MB) are lazy-loaded
+       on first export, so the page opens in ~300KB instead of ~17MB. -->
+  <script defer src="download.js"></script>
+  <script defer src="app.js"></script>
+  <style>
+  /* Step 11 文件閱讀閘門：未閱讀至底前 checkbox 鎖定 */
+  /* 鎖定（未閱讀）：成行泛黃 + 橙框 + 暗化，明顯不可剔 */
+  .check-label.doc-locked { background:#fff8f0; border-color:#f59e0b; opacity:.85; }
+  .check-label.doc-locked .doc-text { color:#92400e; }
+  .check-label.doc-locked input[type="checkbox"] { opacity:.4; cursor:not-allowed; accent-color:#f59e0b; }
+  /* 解鎖（已閱讀）：成行泛綠 + 綠框，明顯可剔 */
+  .check-label.doc-unlocked { background:#f0fdf4; border-color:#86efac; }
+  .check-label.doc-unlocked input[type="checkbox"] { opacity:1; cursor:pointer; accent-color:#16a34a; }
+  /* 提示膠囊：顏色隨狀態變，超醒目 */
+  .doc-view-hint {
+    display:inline-block; margin-left:6px; padding:2px 9px;
+    border-radius:999px; font-size:12px; font-weight:700; color:#fff;
+    background:#1a73e8; cursor:pointer; vertical-align:middle; white-space:nowrap;
+  }
+  .doc-text:not(.doc-read) .doc-view-hint { background:#f59e0b; }
+  .doc-text.doc-read .doc-view-hint { background:#16a34a; }
+  </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand">
+      <img class="logo-svg" src="logo.png?v=4" alt="Corporate Brokers Limited" />
+      <div class="brand-text">
+        <span class="brand-en">Corporate Brokers Limited</span>
+        <span class="brand-zh">協聯證券有限公司</span>
+      </div>
+    </div>
+    <div class="header-title">
+      <span>證券帳戶開戶申請表</span>
+      <span class="header-sub">Securities Account Opening Form</span>
+    </div>
+  </div>
+</header>
+
+<!-- ===== PROGRESS ===== -->
+<div class="progress-wrap">
+  <div class="progress-track"><div class="progress-bar" id="progressBar" style="width:9.09%"></div></div>
+  <span class="progress-label" id="progressLabel">1 / 11</span>
+</div>
+
+<!-- ===== TABS ===== -->
+<nav class="tab-nav" id="tabNav">
+  <button class="tab-btn active" data-step="1"><span class="tab-num">1</span><span class="tab-txt">帳號基本</span></button>
+  <button class="tab-btn" data-step="2"><span class="tab-num">2</span><span class="tab-txt">個人資料</span></button>
+  <button class="tab-btn" data-step="3"><span class="tab-num">3</span><span class="tab-txt">住址通訊</span></button>
+  <button class="tab-btn" data-step="4"><span class="tab-num">4</span><span class="tab-txt">業務工作</span></button>
+  <button class="tab-btn" data-step="5"><span class="tab-num">5</span><span class="tab-txt">財務狀況</span></button>
+  <button class="tab-btn" data-step="6"><span class="tab-num">6</span><span class="tab-txt">投資經驗</span></button>
+  <button class="tab-btn" data-step="7"><span class="tab-num">7</span><span class="tab-txt">銀行帳戶</span></button>
+  <button class="tab-btn" data-step="8"><span class="tab-num">8</span><span class="tab-txt">聲明</span></button>
+  <button class="tab-btn" data-step="9"><span class="tab-num">9</span><span class="tab-txt">佣金費用</span></button>
+  <button class="tab-btn" data-step="10"><span class="tab-num">10</span><span class="tab-txt">電子服務</span></button>
+  <button class="tab-btn" data-step="11"><span class="tab-num">11</span><span class="tab-txt">簽署文件</span></button>
+  <button class="tab-btn" data-step="12"><span class="tab-num">12</span><span class="tab-txt">確認匯出</span></button>
+</nav>
+
+<!-- ===== FORM ===== -->
+<main class="form-main">
+<form id="openAccForm" novalidate autocomplete="off">
+
+<!-- ============================================================ STEP 1 -->
+<section class="step-section active" data-step="1">
+  <div class="section-header"><div class="section-icon">📋</div><div><h2>帳號基本資料</h2><p class="section-sub">Account Basic Information</p></div></div>
+  <div class="card">
+    <div class="form-grid col2">
+      <div class="field-group">
+        <label for="accountNo">戶口號碼 <span class="req">*</span></label>
+        <input type="text" id="accountNo" placeholder="請輸入帳戶號碼" inputmode="numeric" required/>
+      </div>
+      <div class="field-group">
+        <label for="openDate">開戶日期</label>
+        <input type="text" id="openDate" readonly class="readonly-field" value="">
+      </div>
+      <div class="field-group">
+        <label for="aeName">開戶人員 <span class="req">*</span></label>
+        <input type="text" id="aeName" placeholder="AE 姓名" required/>
+      </div>
+      <div class="field-group">
+        <label for="aeCE">CE NO. <span class="req">*</span></label>
+        <input type="text" id="aeCE" placeholder="CE 號碼" required/>
+      </div>
+    </div>
+  </div>
+  <div class="step-nav"><span></span><button type="button" class="btn-next" onclick="goStep(2)">下一步 <span class="arrow">›</span></button></div>
+</section>
+
+<!-- ============================================================ STEP 2 -->
+<section class="step-section" data-step="2">
+  <div class="section-header"><div class="section-icon">👤</div><div><h2>個人資料</h2><p class="section-sub">Personal Information — Page 1</p></div></div>
+  <div class="card">
+    <div class="form-grid col2">
+      <div class="field-group">
+        <label for="title">稱謂 <span class="req">*</span></label>
+        <select id="title" required>
+          <option value="">請選擇</option>
+          <option value="先生(Mr.)">先生 Mr.</option>
+          <option value="太太(Mrs)">太太 Mrs.</option>
+          <option value="女士(Ms.)">女士 Ms.</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label for="engName">英文全名 <span class="req">*</span></label>
+        <input type="text" id="engName" placeholder="Full English Name (as per ID)" required/>
+      </div>
+      <div class="field-group">
+        <label for="chiName">中文姓名</label>
+        <input type="text" id="chiName" placeholder="中文姓名"/>
+      </div>
+      <div class="field-group">
+        <label for="idNo">身份證號碼 <span class="req">*</span></label>
+        <input type="text" id="idNo" placeholder="例：A1234567(8)" required/>
+      </div>
+      <div class="field-group">
+        <label for="dob">出生日期 <span class="req">*</span></label>
+        <input type="date" id="dob" required/>
+      </div>
+      <div class="field-group">
+        <label for="nationality">國籍 <span class="req">*</span></label>
+        <input type="text" id="nationality" placeholder="例：香港 / 中國 / 英國" required/>
+      </div>
+    </div>
+    <div class="field-group mt-16">
+      <label>本人是否美國人士（包括美國稅務居民）？ <span class="req">*</span></label>
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="usResident" value="am not" required/> 不是 (No)</label>
+        <label class="radio-label"><input type="radio" name="usResident" value="am"/> 是 (Yes)</label>
+      </div>
+    </div>
+  </div>
+  <div class="step-nav"><button type="button" class="btn-prev" onclick="goStep(1)"><span class="arrow">‹</span> 上一步</button><button type="button" class="btn-next" onclick="goStep(3)">下一步 <span class="arrow">›</span></button></div>
+</section>
+
+<!-- ============================================================ STEP 3 -->
+<section class="step-section" data-step="3">
+  <div class="section-header"><div class="section-icon">🏠</div><div><h2>住址及通訊</h2><p class="section-sub">Residential Address & Contact — Page 1</p></div></div>
+  <div class="card">
+    <div class="form-grid col2">
+      <div class="field-group">
+        <label for="addrType">地址類別 <span class="req">*</span></label>
+        <select id="addrType" required>
+          <option value="">請選擇</option>
+          <option value="*自置(Self-Owned) :沒有按揭(Mortgage Free)">自置（無按揭）Self-Owned Mortgage Free</option>
+          <option value="*自置(Self-Owned) :有按揭(Mortgaged)">自置（有按揭）Self-Owned Mortgaged</option>
+          <option value="租用(Rented)">租住 Rented</option>
+          <optio value="與家人同住(Living with Family)">與家人同住 Living with Family</opton>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>婚姻狀況 <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-label"><input type="radio" name="maritalStatus" value="single" required onchange="toggleSpouse()"/> 單身 Single</label>
+          <label class="radio-label"><input type="radio" name="maritalStatus" value="married" onchange="toggleSpouse()"/> 已婚 Married</label>
+        </div>
+      </div>
+    </div>
+    <div class="field-group">
+      <label for="residAddr">住宅地址 <span class="req">*</span></label>
+      <textarea id="residAddr" rows="3" placeholder="完整住宅地址 Full Residential Address" required></textarea>
+    </div>
+    <div class="field-group">
+      <label for="mailAddr">通訊地址</label>
+      <textarea id="mailAddr" rows="3" placeholder="如與住宅地址相同，可留空 Same as above if blank"></textarea>
+    </div>
+    <div id="spouseSection" class="field-group hidden">
+      <label for="spouseName">配偶姓名 Spouse Name</label>
+      <input type="text" id="spouseName" placeholder="配偶英文全名"/>
+    </div>
+    <div class="form-grid col3">
+      <div class="field-group">
+        <label for="email">電郵地址</label>
+        <input type="email" id="email" placeholder="email@example.com"/>
+      </div>
+      <div class="field-group">
+        <label for="mobile">手提電話 <span class="req">*</span></label>
+        <input type="tel" id="mobile" placeholder="+852 XXXX XXXX" required inputmode="numeric"/>
+      </div>
+      <div class="field-group">
+        <label for="homePhone">住宅電話</label>
+        <input type="tel" id="homePhone" placeholder="+852 XXXX XXXX" inputmode="numeric"/>
+      </div>
+    </div>
+  </div>
+  <div class="step-nav"><button type="button" class="btn-prev" onclick="goStep(2)"><span class="arrow">‹</span> 上一步</button><button type="button" class="btn-next" onclick="goStep(4)">下一步 <span class="arrow">›</span></button></div>
+</section>
+
+<!-- ============================================================ STEP 4 -->
+<section class="step-section" data-step="4">
+  <div class="section-header"><div class="section-icon">💼</div><div><h2>業務 / 工作狀況</h2><p class="section-sub">Employment Information — Page 3</p></div></div>
+  <div class="card">
+    <div class="form-grid col2">
+      <div class="field-group">
+        <label for="employer">現任雇主</label>
+        <input type="text" id="employer" placeholder="公司名稱 Company Name"/>
+      </div>
+      <div class="field-group">
+        <label for="industry">行業</label>
+        <input type="text" id="industry" placeholder="行業類別 Industry"/>
+      </div>
+      <div class="field-group">
+        <label for="position">職位</label>
+        <input type="text" id="position" placeholder="職位名稱 Position"/>
+      </div>
+      <div class="field-group">
+        <label for="yearsEmployed">受僱年期</label>
+        <input type="text" id="yearsEmployed" placeholder="例：3 年 / 3 Years"/>
+      </div>
+    </div>
+    <div class="field-group">
+      <label for="officeAddr">公司地址</label>
+      <textarea id="officeAddr" rows="3" placeholder="公司完整地址 Office Address"></textarea>
+    </div>
+  </div>
+  <div class="step-nav"><button type="button" class="btn-prev" onclick="goStep(3)"><span class="arrow">‹</span> 上一步</button><button type="button" class="btn-next" onclick="goStep(5)">下一步 <span class="arrow">›</span></button></div>
+</section>
+
+<!-- ============================================================ STEP 5 -->
+<section class="step-section" data-step="5">
+  <div class="section-header"><div class="section-icon">💰</div><div><h2>財務狀況</h2><p class="section-sub">Financial Status — Page 3</p></div></div>
+  <div class="card">
+    <div class="field-group">
+      <label>收入來源（可多選）Source of Income</label>
+      <div class="checkbox-group four-col">
+        <label class="check-label"><input type="checkbox" name="incomeSrc" value="nil" id="incNil" onchange="toggleNilIncome(this)"/> 沒有 Nil</label>
+        <label class="check-label"><input type="checkbox" name="incomeSrc" value="rental" id="incRental"/> 租金 Rental</label>
+        <label class="check-label"><input type="checkbox" name="incomeSrc" value="salary" id="incSalary"/> 薪金 Salary</label>
+        <label class="check-label"><input type="checkbox" name="incomeSrc" value="business" id="incBusiness"/> 業務溢利 Business</label>
+        <label class="check-label"><input type="checkbox" name="incomeSrc" value="other" id="incOther" onchange="toggleIncOther(this)"/> 其他 Others</label>
+      </div>
+      <div class="field-group mt-8 hidden" id="incOtherDetail">
+        <input type="text" id="incOtherText" placeholder="請說明其他收入來源 Please specify other income source"/>
+      </div>
+    </div>
+    <div class="field-group mt-16">
+      <label for="annualIncome">每年收入 Annual Income <span class="req">*</span></label>
+      <select id="annualIncome" required>
+        <option value="">請選擇</option>
+        <option value="leq100k">≤ HK$100,000</option>
+        <option value="100k-250k">HK$100,001 ~ 250,000</option>
+        <option value="250k-500k">HK$250,001 ~ 500,000</option>
+        <option value="500k-1m">HK$500,001 ~ 1,000,000</option>
+        <option value="1m-2m">HK$1,000,001 ~ 2,000,000</option>
+        <option value="gt2m">&gt; HK$2,000,000</option>
+      </select>
+    </div>
+    <div class="field-group mt-16">
+      <label for="netAssets">估計資產淨值 Estimated Net Asset Value <span class="req">*</span></label>
+      <div class="input-unit"><span class="unit prefix">HK$</span><input type="text" id="netAssets" placeholder="0" required/></div>
+    </div>
+    <div class="field-group mt-16">
+      <label>所持資產（可多選）Assets Held</label>
+      <div class="checkbox-group four-col">
+        <label class="check-label"><input type="checkbox" name="assets" value="property" id="astProp"/> 物業 Property</label>
+        <label class="check-label"><input type="checkbox" name="assets" value="securities" id="astSec"/> 證券∕基金 Securities/Funds</label>
+        <label class="check-label"><input type="checkbox" name="assets" value="deposit" id="astDep"/> 存款 Deposits</label>
+        <label class="check-label"><input type="checkbox" name="assets" value="others" id="astOth"/> 其他 Others</label>
+      </div>
+    </div>
+  </div>
+  <div class="step-nav"><button type="button" class="btn-prev" onclick="goStep(4)"><span class="arrow">‹</span> 上一步</button><button type="button" class="btn-next" onclick="goStep(6)">下一步 <span class="arrow">›</span></button></div>
+</section>
+
+<!-- ============================================================ STEP 6 -->
+<section class="step-section" data-step="6">
+  <div class="section-header"><div class="section-icon">📈</div><div><h2>投資經驗</h2><p class="section-sub">Investment Experience — Page 3</p></div></div>
+  <div class="card">
+    <div class="field-group">
+      <label>投資目的（可多選）Investment Objectives</label>
+      <div class="checkbox-group four-col">
+        <label class="check-label"><input type="checkbox" name="invPurpose" value="dividend" id="invDiv"/> 股息收入 Dividend</label>
+        <label class="check-label"><input type="checkbox" name="invPurpose" value="longterm" id="invLong"/> 長線增值 Long-term Growth</label>
+        <label class="check-label"><input type="checkbox" name="invPurpose" value="speculative" id="invSpec"/> 投機增值 Speculation</label>
+        <label class="check-label"><input type="checkbox" name="invPurpose" value="other" id="invOther" onchange="toggleInvOther(this)"/> 其他 Others</label>
+      </div>
+      <div class="field-group mt-8 hidden" id="invOtherDetail">
+        <input type="text" id="invOtherText" placeholder="請說明其他投資目的"/>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="field-group">
+      <label>投資經驗 / 年期 Investment Experience</label>
+      <div class="exp-table">
+        <div class="exp-header exp-header-7col">
+          <span>類別 Type</span>
+          <span>選取</span>
+          <span>未有經驗</span>
+          <span>&lt; 1 年</span>
+          <span>1-5 年</span>
+          <span>5-10 年</span>
+          <span>&gt; 10 年</span>
+        </div>
+        <div class="exp-row exp-row-7col">
+          <span class="exp-label">證券 Securities</span>
+          <label class="check-center"><input type="checkbox" id="expSecCbk" name="expSecCbk" onchange="syncSecCbk(this)"/></label>
+          <label class="radio-center"><input type="radio" name="expSecurities" value="none"/></label>
+          <label class="radio-center"><input type="radio" name="expSecurities" value="lt1"/></label>
+          <label class="radio-center"><input type="radio" name="expSecurities" value="1-5"/></label>
+          <label class="radio-center"><input type="radio" name="expSecurities" value="5-10"/></label>
+          <label class="radio-center"><input type="radio" name="expSecurities" value="gt10"/></label>
+        </div>
+        <div class="exp-row exp-row-7col alt">
+          <span class="exp-label">期貨/期權 Futures/Options</span>
+          <label class="check-center"><input type="checkbox" id="expFutCbk" name="expFutCbk" onchange="syncFutCbk(this)"/></label>
+          <label class="radio-center"><input type="radio" name="expFutures" value="none"/></label>
+          <label class="radio-center"><input type="radio" name="expFutures" value="lt1"/></label>
+          <label class="radio-center"><input type="radio" name="expFutures" value="1-5"/></label>
+          <label class="radio-center"><input type="radio" name="expFutures" value="5-10"/></label>
+          <label class="radio-center"><input type="radio" name="expFutures" value="gt10"/></label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="step-nav"><button type="button" class="btn-prev" onclick="goStep(5)"><span class="arrow">‹</span> 上一步</button><button type="button" class="btn-next" onclick="goStep(7)">下一步 <span class="arrow">›</span></button></div>
+</section>
+
+<!-- ============================================================ STEP 7 -->
+<section class="step-section" data-step="7">
+  <div class="section-header"><div class="section-icon">🏦</div><div><h2>銀行帳戶資料</h2><p class="section-sub">Bank Account Information — Page 5</p></div></div>
+  <div class="card">
+    <div class="form-grid col2">
+      <div class="field-group">
+        <label for="bankName">銀行名稱 Bank Name <span class="req">*</span></label>
+        <input type="text" id="bankName" placeholder="銀行全稱" required/>
+      </div>
+      <div class="field-group">
+        <label for="bankAccName">帳戶名稱 Account Name <span class="req">*</span></label>
+        <input type="text" id="bankAccName" placeholder="帳戶持有人姓名" required/>
+      </div>
+    </div>
+    <div class="form-grid col2">
+      <div class="field-group">
+        <label for="hkdAcc">港幣 HKD 帳戶號碼 <span class="req">*</span></label>
+        <input type="text" id="hkdAcc" placeholder="HKD Account Number" inputmode="numeric" required/>
+      </div>
+      <div class="field-group">
+        <label for="rmbAcc">人民幣 RMB 帳戶號碼（如有）</label>
+        <input type="text" id="rmbAcc" placeholder="RMB Account Number (Optional)" inputmode="numeric"/>
+      </div>
+    </div>
+  </div>
+  <div class="step-nav"><button type="button" class="btn-prev" onclick="goStep(6)"><span class="arrow">‹</span> 上一步</button><button type="button" class="btn-next" onclick="goStep(8)">下一步 <span class="arrow">›</span></button></div>
+</section>
+
+<!-- ============================================================ STEP 8 -->
+<section class="step-section" data-step="8">
+  <div class="section-header"><div class="section-icon">📜</div><div><h2>聲明</h2><p class="section-sub">Declaration — Page 5</p></div></div>
+  <div class="card">
+    <div class="field-group">
+      <label>帳戶最終受益人 Ultimate Beneficial Owner <span class="req">*</span></label>
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="beneficiary" value="self" required onchange="toggleBeneficiary()"/> 客戶本人 Self</label>
+        <label class="radio-label"><input type="radio" name="beneficiary" value="other" onchange="toggleBeneficiary()"/> 其他 Other（請提供下列資料）</label>
+      </div>
+    </div>
+    <div id="beneficiaryDetail" class="hidden sub-card">
+      <div class="form-grid col2">
+        <div class="field-group"><label for="bene_name">受益人姓名</label><input type="text" id="bene_name"/></div>
+        <div class="field-group"><label for="bene_rel">與客戶關係 Relationship</label><input type="text" id="bene_rel"/></div>
+        <div class="field-group"><label for="bene_id">身份證號碼 ID No.</label><input type="text" id="bene_id"/></div>
+        <div class="field-group"><label for="bene_addr">地址 Address</label><input type="text" id="bene_addr"/></div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="field-group">
+      <label>客戶是否與本公司任何董事或職員有任何親屬關係？ <span class="req">*</span></label>
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="affiliated" value="no" required onchange="toggleAffiliated()"/> 沒有 No</label>
+        <label class="radio-label"><input type="radio" name="affiliated" value="yes" onchange="toggleAffiliated()"/> 有 Yes（請提供下列資料）</label>
+      </div>
+    </div>
+    <div id="affiliatedDetail" class="hidden sub-card">
+      <div class="form-grid col2">
+        <div class="field-group"><label for="aff_name">相關人士姓名</label><input type="text" id="aff_name"/></div>
+        <div class="field-group"><label for="aff_rel">關係 Relationship</label><input type="text" id="aff_rel"/></div>
+        <div class="field-group"><label for="aff_dept">部門∕職位</label><input type="text" id="aff_dept"/></div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="field-group">
+      <label>客戶是否交易所參與者之董事或職員或證監會註冊人/持牌人？ <span class="req">*</span></label>
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="sfc" value="no" required onchange="toggleSFC()"/> 不是 No</label>
+        <label class="radio-label"><input type="radio" name="sfc" value="yes" onchange="toggleSFC()"/> 是 Yes</label>
+      </div>
+    </div>
+    <div id="sfcDetail" class="hidden sub-card">
+      <div class="form-grid col2">
+        <div class="field-group"><label for="sfc_exchange">交易所/機構名稱</label><input type="text" id="sfc_exchange"/></div>
+        <div class="field-group"><label for="sfc_position">職位 Position</label><input type="text" id="sfc_position"/></div>
+      </div>
+    </div>
+  </div>
+  <div class="step-nav"><button type="button" class="btn-prev" onclick="goStep(7)"><span class="arrow">‹</span> 上一步</button><button type="button" class="btn-next" onclick="goStep(9)">下一步 <span class="arrow">›</span></button></div>
+</section>
+
+<!-- ============================================================ STEP 9 -->
+<section class="step-section" data-step="9">
+  <div class="section-header"><div class="section-icon">📊</div><div><h2>佣金∕逾期利息∕結算費</h2><p class="section-sub">Commission / Interest / Settlement Fee — Page 18</p></div></div>
+  <div class="card">
+    <table class="fee-table">
+      <thead>
+        <tr><th>交易方式</th><th>佣金率 (%)</th><th>最低收費 Min. (HK$)</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="fee-method"><span class="fee-icon">🌐</span><div><div class="fee-method-name">網上交易</div><div class="fee-method-en">Internet Trading</div></div></div></td>
+          <td><div class="input-unit"><input type="number" id="onlineRate" step="0.001" min="0" max="100" placeholder="0.100" class="fee-input"/><span class="unit">%</span></div></td>
+          <td><div class="input-unit"><span class="unit prefix">HK$</span><input type="number" id="onlineMin" step="1" min="0" placeholder="80" class="fee-input"/></div></td>
+        </tr>
+        <tr class="alt-row">
+          <td><div class="fee-method"><span class="fee-icon">📞</span><div><div class="fee-method-name">電話下單</div><div class="fee-method-en">Phone Order</div></div></div></td>
+          <td><div class="input-unit"><input type="number" id="phoneRate" step="0.001" min="0" max="100" value="0.2" placeholder="0.200" class="fee-input"/><span class="unit">%</span></div></td>
+          <td><div class="input-unit"><span class="unit prefix">HK$</span><input type="number" id="phoneMin" step="1" min="0" value="80" placeholder="100" class="fee-input"/></div></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="info-box mt-16">
+      <div class="info-row"><span class="info-label">⏰ 逾期交收利息 Overdue Interest</span><span class="info-value highlight">P + 5%</span></div>
+      <div class="info-row"><span class="info-label">🧾 結算費 Settlement Fee</span><span class="info-value highlight">0.1% min. HK$5</span></div>
+    </div>
+  </div>
+  <div class="step-nav"><button type="button" class="btn-prev" onclick="goStep(8)"><span class="arrow">‹</span> 上一步</button><button type="button" class="btn-next" onclick="goStep(10)">下一步 <span class="arrow">›</span></button></div>
+</section>
+
+<!-- ============================================================ STEP 10 -->
+<section class="step-section" data-step="10">
+  <div class="section-header"><div class="section-icon">💻</div><div><h2>電子交易服務</h2><p class="section-sub">Electronic Trading Services — Page 18</p></div></div>
+  <div class="card">
+    <div class="service-grid">
+      <div class="service-card">
+        <div class="service-icon-lg">🌐</div>
+        <div class="service-info">
+          <div class="service-name">互聯網交易服務</div>
+          <div class="service-en">Internet Trading Service</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggleInternet"/>
+          <span class="slider round"></span>
+        </label>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-lg">📱</div>
+        <div class="service-info">
+          <div class="service-name">流動電話交易服務</div>
+          <div class="service-en">Mobile Phone Trading Service</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggleMobile"/>
+          <span class="slider round"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="step-nav"><button type="button" class="btn-prev" onclick="goStep(9)"><span class="arrow">‹</span> 上一步</button><button type="button" class="btn-next" onclick="goStep(11)">下一步 — 簽署文件 <span class="arrow">›</span></button></div>
+</section>
+
+<!-- ============================================================ STEP 11 : 簽署文件 (Documents to be Signed) -->
+<section class="step-section" data-step="11">
+  <div class="section-header"><div class="section-icon">&#x1F4DD;</div><div><h2>簽署文件</h2><p class="section-sub">Documents to be Signed</p></div></div>
+
+  <div class="card">
+    <p class="doc-ack-hint">請勾選以下已簽署／確認之文件：</p>
+    <div class="checkbox-group">
+      <div class="check-label doc-check"><input type="checkbox" name="docAck1" data-sig="Signature1" /> <span class="doc-text" data-doc="0" data-title="客戶聲明">客戶聲明此開戶資料表格所載之資料（特別是關於本人是否美國的公民∕居民∕綠咭持有人∕納稅人（個人資料第5項））均屬真實、完全及正確<span class="doc-view-hint">📄 查看</span></span></div>
+      <div class="check-label doc-check"><input type="checkbox" name="docAck2" data-sig="Signature3" /> <span class="doc-text" data-doc="1" data-title="證券交易現金客戶協議">證券交易現金客戶協議<span class="doc-view-hint">📄 查看</span></span></div>
+      <div class="check-label doc-check"><input type="checkbox" name="docAck3" data-sig="Signature4" /> <span class="doc-text" data-doc="2" data-title="風險披露聲明（分條）">吾等閱讀證券交易現金客戶協議中的第7.3、7.5、7.11、13.5及15.1至15.8分條的風險披露聲明、提出問題及徵求獨立的意見(如本人∕吾等有此意願)，並已提供按照本人∕吾等所選擇的語言(英文或中文)所篇寫的該等風險披露聲明。<span class="doc-view-hint">📄 查看</span></span></div>
+      <div class="check-label doc-check"><input type="checkbox" name="docAck4" data-sig="Signature5" /> <span class="doc-text" data-doc="3" data-title="風險披露聲明（衍生產品）">風險披露聲明 (買賣的衍生產品)<span class="doc-view-hint">📄 查看</span></span></div>
+      <div class="check-label doc-check"><input type="checkbox" name="docAck5" data-sig="Signature6" /> <span class="doc-text" data-doc="4" data-title="中華通北向交易委託">中華通北向交易委託（投資者識別碼模式）客戶同意書<span class="doc-view-hint">📄 查看</span></span></div>
+      <div class="check-label doc-check"><input type="checkbox" name="docAck6" data-sig="Signature7" /> <span class="doc-text" data-doc="5" data-title="CRS 自我證明表格">CRS 自我證明表格 (申報個人或企業「稅務居民身分」的官方聲明文件)<span class="doc-view-hint">📄 查看</span></span></div>
+      <div class="check-label doc-check"><input type="checkbox" name="docAck7" data-sig="Signature8" /> <span class="doc-text" data-doc="6" data-title="香港投資者識別碼表格">香港投資者識別碼表格<span class="doc-view-hint">📄 查看</span></span></div>
+      <div class="check-label doc-check"><input type="checkbox" name="docAck8" data-sig="Signature2" /> <span class="doc-text-noclick" data-title="申請電子交易服務">申請電子交易服務</span></div>
+    </div>
+  </div>
+
+  <div class="step-nav"><button type="button" class="btn-prev" onclick="goStep(10)"><span class="arrow">‹</span> 上一步</button><button type="button" class="btn-next" onclick="goStep(12)">下一步 — 確認資料 <span class="arrow">›</span></button></div>
+</section>
+
+<!-- ============================================================ STEP 12 : 申請資料確認 + 匯出 -->
+<section class="step-section" data-step="12">
+  <div class="section-header"><div class="section-icon">✅</div><div><h2>申請資料確認</h2><p class="section-sub">Application Summary & Export</p></div></div>
+
+  <!-- Summary Card -->
+  <div class="card summary-card">
+    <div class="summary-card-header">
+      <div class="summary-brand">
+        <img class="logo-svg" src="logo.png?v=4" alt="Corporate Brokers Limited" style="background:transparent;" />
+        <div>
+          <div class="summary-brand-en">Corporate Brokers Limited</div>
+          <div class="summary-brand-zh">開戶申請資料確認</div>
+        </div>
+      </div>
+      <p class="summary-hint">請核對以下所有資料正確無誤，然後按「匯出 PDF」</p>
+    </div>
+    <div id="summaryContent"></div>
+  </div>
+
+  <!-- Signature Section -->
+  <div class="card sig-card">
+    <div class="sig-header">
+      <div class="sig-icon">&#x270D;&#xFE0F;</div>
+      <div>
+        <h3>客戶簽署 Client Signature</h3>
+        <p class="sig-hint">請在下方框內以手寫簽署（支援觸控／滑鼠）</p>
+      </div>
+    </div>
+    <canvas id="sigCanvas"></canvas>
+    <button type="button" class="btn-clear-sig" onclick="clearSig()">&#x1F5D1;&#xFE0F; 清除 Clear</button>
+  </div>
+
+  <!-- Export Action -->
+  <div class="card export-card">
+    <div class="export-info">
+      <div class="export-icon">📄</div>
+      <div>
+        <div class="export-title">匯出開戶申請 PDF</div>
+        <div class="export-desc">將自動填寫原始 PDF 表格並下載至本機，可直接列印簽署</div>
+      </div>
+    </div>
+    <div class="export-actions">
+      <button type="button" class="btn-prev" onclick="goStep(11)"><span class="arrow">‹</span> 返回修改</button>
+      <button type="button" class="btn-submit" id="submitBtn" onclick="exportPDF()">
+        <span>⬇️</span> 匯出 PDF
+      </button>
+    </div>
+  </div>
+</section>
+
+</form>
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <span>© 2026 Corporate Brokers Limited 協聯證券有限公司</span>
+  <span class="footer-note">本申請表之資料只供內部使用 · For Internal Use Only</span>
+</footer>
+
+<!-- LOADING OVERLAY -->
+<div class="overlay hidden" id="loadingOverlay">
+  <div class="spinner-wrap">
+    <div class="spinner"></div>
+    <p>正在填寫並生成 PDF⋯<br/><small>Generating PDF, please wait...</small></p>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast hidden" id="toast"></div>
+
+<!-- EXPORT CHOICE MODAL -->
+<!-- DOC PREVIEW MODAL -->
+<div class="doc-modal-overlay hidden" id="docModal">
+  <div class="doc-modal">
+    <div class="doc-modal-head">
+      <span class="doc-modal-title" id="docModalTitle">文件頁面</span>
+      <button type="button" class="doc-modal-close" id="docModalClose" aria-label="關閉">✕</button>
+    </div>
+    <div class="doc-modal-body" id="docModalBody"></div>
+  </div>
+</div>
+
+
+</body>
+</html>
+
+
+
+
+
